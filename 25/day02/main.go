@@ -31,22 +31,52 @@ func parseInput() ([][2]int, error) {
 	return result, nil
 }
 
-func calculateInvalidIDs(input []string) int {
+func calculateInvalidIDs(id string) int {
 	res := 0
-	for _, id := range input {
-		for i, _ := range id {
-			// fmt.Println(i, id[:i], id[i:])
-			if id[:i] == id[i:] {
-				// fmt.Println("invalid id: ", id)
-				tmp, err := strconv.Atoi(id)
-				if err != nil {
-					fmt.Println(err)
-					return 0
-				}
-				res += tmp
+	for i, _ := range id {
+		// fmt.Println(i, id[:i], id[i:])
+		if id[:i] == id[i:] {
+			// fmt.Println("invalid id: ", id)
+			tmp, err := strconv.Atoi(id)
+			if err != nil {
+				fmt.Println(err)
+				return 0
 			}
+			res += tmp
 		}
 	}
+	return res
+}
+
+func calculateInvalidIDs2(id string) int {
+	isRepeating := false
+	for i := 1; i <= len(id)/2; i++ {
+		if len(id)%i != 0 {
+			continue
+		}
+		isRepeating1 := true
+		for j := 1; j*i <= len(id); j++ {
+			// fmt.Println("comparing: ", id[:i], id[i*(j-1):i*j], id)
+			if id[:i] != id[i*(j-1):i*j] {
+				isRepeating1 = false
+				break
+			}
+		}
+		if isRepeating1 {
+			isRepeating = true
+			break
+		}
+	}
+	if !isRepeating {
+		// fmt.Println("valid id: ", id)
+		return 0
+	}
+	res, err := strconv.Atoi(id)
+	if err != nil {
+		fmt.Println(err)
+		return 0
+	}
+	// fmt.Println("invalid id: ", id)
 	return res
 }
 
@@ -57,12 +87,15 @@ func main() {
 		return
 	}
 	// fmt.Println(input)
-	res := 0
+	res1 := 0
+	res2 := 0
 	for _, idRange := range input {
 		for i := idRange[0]; i <= idRange[1]; i++ {
-			res += calculateInvalidIDs([]string{strconv.Itoa(i)})
+			res1 += calculateInvalidIDs(strconv.Itoa(i))
+			res2 += calculateInvalidIDs2(strconv.Itoa(i))
 		}
 	}
 
-	fmt.Println(res)
+	fmt.Println(res1)
+	fmt.Println(res2)
 }
