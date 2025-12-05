@@ -49,26 +49,11 @@ func calculateInvalidIDs(id string) int {
 }
 
 func calculateInvalidIDs2(id string) int {
-	isRepeating := false
-	for i := 1; i <= len(id)/2; i++ {
-		if len(id)%i != 0 {
-			continue
-		}
-		isRepeating1 := true
-		for j := 1; j*i <= len(id); j++ {
-			// fmt.Println("comparing: ", id[:i], id[i*(j-1):i*j], id)
-			if id[:i] != id[i*(j-1):i*j] {
-				isRepeating1 = false
-				break
-			}
-		}
-		if isRepeating1 {
-			isRepeating = true
-			break
-		}
+	if len(id) < 2 {
+		return 0
 	}
-	if !isRepeating {
-		// fmt.Println("valid id: ", id)
+	doubled := id + id
+	if !strings.Contains(doubled[1:len(doubled)-1], id) {
 		return 0
 	}
 	res, err := strconv.Atoi(id)
@@ -76,7 +61,6 @@ func calculateInvalidIDs2(id string) int {
 		fmt.Println(err)
 		return 0
 	}
-	// fmt.Println("invalid id: ", id)
 	return res
 }
 
