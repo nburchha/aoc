@@ -48,7 +48,6 @@ func checkId(id int, merged []Interval) bool {
 		candidate := merged[i-1]
 		// fmt.Println("id", id, "is checked in this range:", candidate)
 		if id <= candidate.End && id >= candidate.Start {
-			fmt.Println("id", id, "is valid in range", candidate)
 			return true
 		}
 	}
@@ -70,22 +69,38 @@ func mergeRanges(ranges []Interval) []Interval {
 	return merged
 }
 
+func countFreshIngredientIDs(r Interval) int {
+	return r.End - r.Start + 1
+}
+
+func totalRangeLength(merged []Interval) int {
+	res := 0
+	for _, interval := range merged {
+		res += countFreshIngredientIDs(interval)
+	}
+	return res
+}
+
 func main() {
 	ranges, ids := parseInput("../input/day05.txt")
 	// ranges, ids := parseInput("../input/test05.txt")
 
-	fmt.Println("how they are", ranges)
+	// fmt.Println("how they are", ranges)
 	sort.Slice(ranges, func(i, j int) bool {
 		return ranges[i].Start < ranges[j].Start
 	})
-	fmt.Println("sorted", ranges)
 	merged := mergeRanges(ranges)
-	fmt.Println("merged", merged)
+	for _, interval := range merged {
+		fmt.Println(interval, interval.End-interval.Start+1)
+	}
 	res := 0
 	for _, id := range ids {
 		if checkId(id, merged) {
 			res++
 		}
 	}
-	fmt.Println(res)
+	fmt.Println("how many ingredients are fresh (1. puzzle)?", res)
+
+	res2 := totalRangeLength(merged)
+	fmt.Println("how many fresh ingredient IDs are there (2. puzzle)?", res2)
 }
