@@ -60,7 +60,7 @@ func mergeRanges(ranges []Interval) []Interval {
 		if i == 0 {
 			continue
 		}
-		if r.Start < ranges[i-1].End {
+		if r.Start <= merged[len(merged)-1].End {
 			merged[len(merged)-1].End = max(r.End, ranges[i-1].End)
 			continue
 		}
